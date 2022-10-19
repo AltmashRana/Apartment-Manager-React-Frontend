@@ -1,4 +1,4 @@
-import { Box, Button, Input, Paper, Typography } from '@mui/material';
+import { Box, Button, Input, Paper} from '@mui/material';
 import React from 'react'
 
 const Home = () => {

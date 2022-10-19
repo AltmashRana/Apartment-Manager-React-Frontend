@@ -16,11 +16,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { menuList } from "../utils/constants";
+import { menuList } from "../utils/constants/CONSTANTS";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Switch } from "@mui/material";
-import { changeThemeMode } from "../features/themeMode/themeSlice";
+import { changeThemeMode } from "../redux/theme/theme.actions";
+import { createStructuredSelector } from "reselect";
+import { getThemeMode } from "../redux/theme/theme.selectors";
 
 const drawerWidth = 240;
 
@@ -31,7 +33,7 @@ const openedMixin = (theme, mode) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
-  background: mode === "light"? theme.palette.primary.main: theme.palette.background.paper
+  background: mode === "light" ? theme.palette.primary.main : theme.palette.background.paper
 });
 
 const closedMixin = (theme, mode) => ({
@@ -44,7 +46,7 @@ const closedMixin = (theme, mode) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  background: mode === "light"? theme.palette.primary.main: theme.palette.background.paper
+  background: mode === "light" ? theme.palette.primary.main : theme.palette.background.paper
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -80,7 +82,7 @@ const Drawer = styled(MuiDrawer, {
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-  background: mode === "light"? theme.palette.primary.main: theme.palette.background.paper,
+  background: mode === "light" ? theme.palette.primary.main : theme.palette.background.paper,
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme, mode),
@@ -144,106 +146,113 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export default function MiniDrawer() {
-  const theme = useTheme();
-  const [open, setOpen] = useState(false);
+const MiniDrawer =
+  ({
+    mode,
+    changeThemeMode,
+  }) => {
+    const theme = useTheme();
+    const [open, setOpen] = useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    const handleDrawerOpen = () => {
+      setOpen(true);
+    };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  const [menuSelected, setMenuSelected] = useState('Home')
-  const onMenuSelect = (name, path) => {
-    navigate(path);
-    setMenuSelected(name);
-  }
+    const handleDrawerClose = () => {
+      setOpen(false);
+    };
+    const navigate = useNavigate();
 
-  const mode = useSelector((store) => store.theme.mode);
-
-  const switchThemeMode = (event) => {
-    if(event.target.checked){
-      dispatch(changeThemeMode('dark'));
+    const [menuSelected, setMenuSelected] = useState('Home')
+    const onMenuSelect = (name, path) => {
+      navigate(path);
+      setMenuSelected(name);
     }
-    else{
-      dispatch(changeThemeMode('light'));
-    }
-  }
 
-  return (
-    <Box sx={{background: mode === "light"? theme.palette.primary.main: theme.palette.background.paper}}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Flatish
-          </Typography>
-          <MaterialUISwitch checked={mode !== 'light'}
-            onChange={switchThemeMode}
-            sx={{ m: 1, marginLeft: 'auto' }} />
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open} mode={mode}>
-        <DrawerHeader sx={{ background: mode === "light"? theme.palette.primary.main: theme.palette.background.paper}}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List sx={{paddingTop: 0}}>
-          {menuList.map((item) => (
-            <ListItem key={item.name} disablePadding sx={{ display: "block"}}>
-              <ListItemButton onClick={() => onMenuSelect(item.name, item.path)}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  paddingY: 2,
-                  color: menuSelected === item.name ? theme.palette.secondary.main : '#fff',
-                }}
-              >
-                <ListItemIcon
+    const switchThemeMode = (event) => {
+      if (event.target.checked) {
+        changeThemeMode('dark');
+      }
+      else {
+        changeThemeMode('light');
+      }
+    }
+
+    return (
+      <Box sx={{ background: mode === "light" ? theme.palette.primary.main : theme.palette.background.paper }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: 5,
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Flatish
+            </Typography>
+            <MaterialUISwitch checked={mode !== 'light'}
+              onChange={switchThemeMode}
+              sx={{ m: 1, marginLeft: 'auto' }} />
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open} mode={mode}>
+          <DrawerHeader sx={{ background: mode === "light" ? theme.palette.primary.main : theme.palette.background.paper }}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List sx={{ paddingTop: 0 }}>
+            {menuList.map((item) => (
+              <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
+                <ListItemButton onClick={() => onMenuSelect(item.name, item.path)}
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    paddingY: 2,
                     color: menuSelected === item.name ? theme.palette.secondary.main : '#fff',
                   }}
                 >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText sx={{ opacity: open ? 1 : 0 }}>
-                  <Typography fontWeight="bold">
-                    {item.name}
-                  </Typography>
-                </ListItemText>
-              </ListItemButton>
-              <Divider />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </Box>
-  );
-}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                      color: menuSelected === item.name ? theme.palette.secondary.main : '#fff',
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                    <Typography fontWeight="bold">
+                      {item.name}
+                    </Typography>
+                  </ListItemText>
+                </ListItemButton>
+                <Divider />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </Box>
+    );
+  }
+
+const mapStateToProps = createStructuredSelector({
+  mode: getThemeMode,
+});
+
+export default connect(mapStateToProps, { changeThemeMode })(MiniDrawer);

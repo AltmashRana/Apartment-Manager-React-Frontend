@@ -1,11 +1,11 @@
-import { CssBaseline, Box, Typography, ThemeProvider, Button } from "@mui/material";
-import { createTheme, styled, useTheme } from "@mui/material/styles";
+import { hot } from "react-hot-loader/root";
+import { CssBaseline, Box, ThemeProvider } from "@mui/material";
+import { createTheme, styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { Provider, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import MiniDrawer from "./components/Drawer";
-import AppRouter from "./router/AppRouter";
-import { store } from "./store/store";
+import AppRouter from "./navigation/RouterConfig";
 import { getTheme } from "./theme";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -17,7 +17,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function App() {
+const App = () => {
   const [theme, setTheme] = useState(createTheme(getTheme('light')));
 
   const mode = useSelector((store) => store.theme.mode);
@@ -28,16 +28,18 @@ export default function App() {
   return (
     <Box sx={{ display: "flex" }}>
       <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <CssBaseline>
-              <MiniDrawer />
-              <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
-                <AppRouter />
-              </Box>
-            </CssBaseline>
-          </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline>
+            <MiniDrawer />
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+              <DrawerHeader />
+              <AppRouter />
+            </Box>
+          </CssBaseline>
+        </ThemeProvider>
       </BrowserRouter>
     </Box>
   );
 }
+
+export default hot(App);

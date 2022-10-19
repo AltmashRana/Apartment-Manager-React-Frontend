@@ -1,4 +1,4 @@
-import { HomeOutlined, ApartmentOutlined } from "@mui/icons-material"
+import { HomeOutlined, ApartmentOutlined } from "@mui/icons-material";
 
 export const menuList = [
     {
