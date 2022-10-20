@@ -1,8 +1,11 @@
-import React from 'react'
+import ApartmentLV from './ApartmentLV';
+import { Box } from '@mui/material';
 
 const Apartment = () => {
   return (
-    <div>Apartment</div>
+    <Box>
+      <ApartmentLV />
+    </Box>
   )
 }
 

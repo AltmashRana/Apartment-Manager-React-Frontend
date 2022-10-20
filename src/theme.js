@@ -5,17 +5,20 @@ export const getTheme = (mode) => ({
         mode,
         ...(mode === 'light' ? {
             primary: {
-                main: '#27b0ff',
-                contrastText: '#000'
+                main: '#000',
+                constrastText: '#fff'
             },
             secondary: orange,
             text: {
                 primary: '#000',
                 secondary: grey[900],
+            },
+            background: {
+                paper: '#F5F5F7'
             }
         } : {
             primary: {
-                main: '#27b0ff',
+                main: grey[400],
                 contrastText: '#000'
             },
             secondary: orange,
@@ -42,5 +45,15 @@ export const getTheme = (mode) => ({
                 }
             }
         },
+        MuiFab: {
+            styleOverrides: {
+                root: {
+                    position: 'fixed',
+                    bottom: '2rem',
+                    right: '2rem',
+                }
+            }
+        }
     }
 });
+

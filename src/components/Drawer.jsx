@@ -17,7 +17,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { menuList } from "../utils/constants/CONSTANTS";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { Switch } from "@mui/material";
 import { changeThemeMode } from "../redux/theme/theme.actions";
@@ -149,7 +149,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 const MiniDrawer =
   ({
     mode,
-    changeThemeMode,
+    changeThemeMode
   }) => {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
@@ -163,10 +163,10 @@ const MiniDrawer =
     };
     const navigate = useNavigate();
 
-    const [menuSelected, setMenuSelected] = useState('Home')
-    const onMenuSelect = (name, path) => {
+    const [menuSelected, setMenuSelected] = useState(useLocation().pathname)
+    const onMenuSelect = (path) => {
       navigate(path);
-      setMenuSelected(name);
+      setMenuSelected(path);
     }
 
     const switchThemeMode = (event) => {
@@ -205,7 +205,7 @@ const MiniDrawer =
         </AppBar>
         <Drawer variant="permanent" open={open} mode={mode}>
           <DrawerHeader sx={{ background: mode === "light" ? theme.palette.primary.main : theme.palette.background.paper }}>
-            <IconButton onClick={handleDrawerClose}>
+            <IconButton color="secondary" onClick={handleDrawerClose}>
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon />
               ) : (
@@ -217,7 +217,7 @@ const MiniDrawer =
           <List sx={{ paddingTop: 0 }}>
             {menuList.map((item) => (
               <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
-                <ListItemButton onClick={() => onMenuSelect(item.name, item.path)}
+                <ListItemButton onClick={() => onMenuSelect( item.path)}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
@@ -231,7 +231,7 @@ const MiniDrawer =
                       minWidth: 0,
                       mr: open ? 3 : "auto",
                       justifyContent: "center",
-                      color: menuSelected === item.name ? theme.palette.secondary.main : '#fff',
+                      color: menuSelected === item.path ? theme.palette.secondary.main : '#fff',
                     }}
                   >
                     {item.icon}
