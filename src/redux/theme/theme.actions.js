@@ -1,7 +1,7 @@
 import { CHANGE_THEME_MODE } from "../CONSTANTS";
 
 
-export const changeThemeMode = (mode) => async (dispatch) => {
+export const changeThemeMode = (mode) => (dispatch) => {
     dispatch({
         type: CHANGE_THEME_MODE,
         payload: { mode },

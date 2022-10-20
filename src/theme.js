@@ -34,13 +34,13 @@ export const getTheme = (mode) => ({
         MuiButton: {
             defaultProps:{
                 variant: "contained",
+            },
+            styleOverrides: {
+                root: {
+                    textTransform: 'none',
+                    fontWeight: 'bold'
+                }
             }
         },
-        // MuiButtonBase: {
-        //     styleOverrides: {
-        //         root: {
-        //         }
-        //     }
-        // }
     }
 });
