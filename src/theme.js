@@ -15,7 +15,8 @@ export const getTheme = (mode) => ({
             },
             background: {
                 paper: '#F5F5F7'
-            }
+            },
+            divider: grey[700]
         } : {
             primary: {
                 main: grey[400],
@@ -26,7 +27,7 @@ export const getTheme = (mode) => ({
                 primary: '#fff',
                 secondary: grey[400],
             },
-            divider: orange,
+            divider: grey[700],
             background: {
                 default: '#000000',
                 paper: grey[900]
