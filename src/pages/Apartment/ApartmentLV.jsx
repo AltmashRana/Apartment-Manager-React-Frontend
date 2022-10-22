@@ -1,5 +1,5 @@
 import { Add } from '@mui/icons-material'
-import { Box, Fab, Stack } from '@mui/material'
+import { Fab, Grid } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -11,15 +11,13 @@ const ApartmentLV = ({
 }) => {
     return (
         <>
-            <Box p={2} sx={{ overFlowY: 'auto', height: '100%', flex: 2 }}>
-                <Stack sx={{ scrollbarWidth: 'thin', flexDirection: { sx: 'column', md: 'row' } }} flexWrap="wrap" justifyContent="space-evenly" gap={2}>
-                    {apartmentList.map((apartment) => (
-                        <Box key={apartment.id}>
-                            <ApartmentCard apartment={apartment} />
-                        </Box>
-                    ))}
-                </Stack >
-            </Box>
+            <Grid container columnSpacing={2} rowGap={2}>
+                {apartmentList.map((apartment) => (
+                    <Grid item xs={12} sm={12} md={6} lg={4} xl={3} xxl={2} key={apartment.id} sx={{ minWidth: 'auto' }}>
+                        <ApartmentCard apartment={apartment} />
+                    </Grid>
+                ))}
+            </Grid>
             <Fab color="primary" sx={{ size: { xs: 'medium', md: 'large' } }}>
                 <Add />
             </Fab>
